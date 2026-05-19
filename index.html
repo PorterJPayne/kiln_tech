@@ -1,503 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kiln Spec Clone</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-    :root {
-      --bg: #f6f4f0;
-      --sidebar: #efede8;
-      --card: #ffffff;
-      --border: #dfdbd3;
-      --text: #1f2a1f;
-      --muted: #6e726d;
-      --green: #0f2618;
-      --green-light: #23372c;
-      --hover: #e5e1d9;
-    }
+  <title>Paint Map Manager</title>
 
-    body {
-      font-family: "Inter", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      height: 100vh;
-      overflow: hidden;
-    }
+  <link rel="stylesheet" href="style.css">
 
-    .app {
-      display: flex;
-      height: 100vh;
-    }
-
-    /* SIDEBAR */
-
-    .sidebar {
-      width: 260px;
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo {
-      padding: 26px 22px 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo h1 {
-      font-size: 30px;
-      font-weight: 700;
-      font-family: "Libre Baskerville", serif;
-    }
-
-    .beta {
-      border: 1px solid #c8c3b8;
-      padding: 3px 7px;
-      border-radius: 6px;
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .search {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .search input {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: white;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .nav-section {
-      padding: 18px 0 8px;
-    }
-
-    .nav-title {
-      font-size: 13px;
-      color: var(--muted);
-      padding: 0 20px 10px;
-      font-weight: 600;
-    }
-
-    .nav-item {
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: .2s;
-      color: #2d332d;
-      font-size: 15px;
-    }
-
-    .nav-item:hover {
-      background: var(--hover);
-    }
-
-    .nav-item.active {
-      background: #dfdbd3;
-      font-weight: 600;
-    }
-
-    .bottom-user {
-      margin-top: auto;
-      padding: 18px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: white;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #c9c5bc;
-    }
-
-    .user-info {
-      font-size: 14px;
-    }
-
-    .user-info span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* MAIN */
-
-    .main {
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .topbar {
-      padding: 42px 42px 28px;
-      border-bottom: 1px solid var(--border);
-      background: #f9f8f5;
-    }
-
-    .topbar h2 {
-      font-family: "Libre Baskerville", serif;
-      font-size: 58px;
-      margin-bottom: 12px;
-      font-weight: 700;
-    }
-
-    .topbar p {
-      color: var(--muted);
-      font-size: 22px;
-    }
-
-    .toolbar {
-      margin: 28px 42px;
-      background: linear-gradient(90deg, #162d20, #0f2618);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .toolbar-left {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.1);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .toolbar-search {
-      width: 320px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.12);
-      padding: 12px 16px;
-      border-radius: 8px;
-      color: white;
-      outline: none;
-    }
-
-    .content {
-      padding: 0 42px 42px;
-    }
-
-    .section-title {
-      background: #eeebe5;
-      padding: 18px 22px;
-      border-radius: 10px;
-      font-size: 34px;
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
-
-    .subsection {
-      background: #f1efea;
-      padding: 16px 20px;
-      border-radius: 10px;
-      margin-bottom: 24px;
-      font-weight: 600;
-      font-size: 20px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      transition: .2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
-    }
-
-    .card-image {
-      height: 240px;
-      background: #f0eeea;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #aaa;
-      font-size: 18px;
-    }
-
-    .card-body {
-      padding: 22px;
-    }
-
-    .card-title {
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 18px;
-      line-height: 1.2;
-    }
-
-    .tags {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .tag {
-      background: #efede8;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      color: #555;
-    }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 16px;
-    }
-
-    .price {
-      font-size: 28px;
-      font-weight: 600;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    footer {
-      padding: 24px 42px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 14px;
-      background: white;
-    }
-
-    @media (max-width: 1100px) {
-      .sidebar {
-        display: none;
-      }
-
-      .topbar h2 {
-        font-size: 42px;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-      }
-
-      .toolbar-search {
-        width: 100%;
-      }
-    }
-
-  </style>
 </head>
 
 <body>
 
-<div class="app">
+<header class="topbar">
+
+  <div class="topbar-left">
+
+    <h2>
+      Paint Map Manager
+    </h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search room..."
+    >
+
+  </div>
+
+  <div class="topbar-right">
+
+    <button id="drawBtn">
+      Draw Room
+    </button>
+
+    <button
+      id="undoBtn"
+      class="hidden"
+    >
+      Undo Point
+    </button>
+
+    <button
+      id="finishBtn"
+      class="hidden"
+    >
+      Finish Room
+    </button>
+
+    <button
+      id="cancelBtn"
+      class="hidden"
+    >
+      Cancel
+    </button>
+
+    <button id="resetViewBtn">
+      Reset View
+    </button>
+
+    <button id="inventoryBtn">
+      Inventory
+    </button>
+
+    <select id="floorSelect">
+
+      <option value="1st-floor">
+        1st Floor
+      </option>
+
+      <option value="2nd-floor">
+        2nd Floor
+      </option>
+
+      <option value="5th-floor">
+        5th Floor
+      </option>
+
+    </select>
+
+  </div>
+
+</header>
+
+<div class="layout">
+
+  <aside class="room-list">
+
+    <h3>
+      Rooms
+    </h3>
+
+    <div id="roomList"></div>
+
+  </aside>
+
+  <section class="map-section">
+
+    <div
+      id="drawStatus"
+      class="draw-status hidden"
+    >
+
+      Drawing Mode
+
+      <br><br>
+
+      Click to add points
+
+      <br>
+
+      Enter = Finish
+
+      <br>
+
+      Backspace = Undo
+
+    </div>
+
+    <div
+      id="mapViewport"
+      class="map-viewport"
+    >
+
+      <div
+        id="mapTransform"
+        class="map-transform"
+      >
+
+        <div class="map-container">
+
+          <img
+            id="floorImage"
+            src="images/1st-floor.png"
+          >
+
+          <svg
+            id="overlay"
+            viewBox="0 0 2000 743"
+            preserveAspectRatio="none"
+          ></svg>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
   <aside class="sidebar">
 
-    <div class="logo">
-      <h1>kiln | spec</h1>
-      <div class="beta">BETA</div>
+    <div id="emptyState">
+
+      <h2>
+        Select a room
+      </h2>
+
     </div>
 
-    <div class="search">
-      <input type="text" placeholder="Search everything..." />
-    </div>
+    <div
+      id="roomPanel"
+      class="hidden"
+    >
 
-    <div class="nav-section">
-      <div class="nav-item">Dashboard</div>
-      <div class="nav-item">Notifications</div>
-    </div>
+      <h1 id="roomTitle"></h1>
 
-    <div class="nav-section">
-      <div class="nav-title">Standards</div>
+      <div id="floorLabel"></div>
 
-      <div class="nav-item active">Products</div>
-      <div class="nav-item">Finishes</div>
-      <div class="nav-item">Equipment</div>
-      <div class="nav-item">Spaces</div>
-      <div class="nav-item">Sites</div>
-    </div>
+      <div class="sidebar-buttons">
 
-    <div class="nav-section">
-      <div class="nav-title">Tools</div>
+        <button id="editBtn">
+          Edit
+        </button>
 
-      <div class="nav-item">Product Pipeline</div>
-      <div class="nav-item">Sourcing Pipeline</div>
-      <div class="nav-item">Marketplace</div>
-      <div class="nav-item">Community Portal</div>
-    </div>
+        <button
+          id="saveBtn"
+          class="hidden"
+        >
+          Save
+        </button>
 
-    <div class="bottom-user">
-      <div class="avatar"></div>
+        <button
+          id="cancelEditBtn"
+          class="hidden"
+        >
+          Cancel
+        </button>
 
-      <div class="user-info">
-        Porter Payne<br>
-        <span>porter.p@kiln.com</span>
       </div>
+
+      <div id="paintContainer"></div>
+
+      <h3>
+        Notes
+      </h3>
+
+      <div
+        id="notesDisplay"
+        class="notes-box"
+      >
+        No notes
+      </div>
+
+      <textarea
+        id="notesField"
+        rows="5"
+        class="hidden"
+      ></textarea>
+
     </div>
 
   </aside>
 
-  <main class="main">
+</div>
 
-    <div class="topbar">
-      <h2>Products</h2>
-      <p>Browse and manage your standard product catalog.</p>
-    </div>
+<div id="inventoryView" class="hidden">
 
-    <div class="toolbar">
+  <div class="inventory-topbar">
 
-      <div class="toolbar-left">
-        <button class="btn">Filters</button>
-        <input class="toolbar-search" placeholder="Search products..." />
-      </div>
+    <h1>
+      Paint Inventory
+    </h1>
 
-      <div class="toolbar-left">
-        <button class="btn">Collapse</button>
-        <button class="btn">Cards</button>
-        <button class="btn">Table</button>
-      </div>
+    <div class="inventory-actions">
 
-    </div>
+      <input
+        type="text"
+        id="inventorySearch"
+        placeholder="Search inventory..."
+      >
 
-    <div class="content">
+      <button id="addInventoryBtn">
+        + Add Paint
+      </button>
 
-      <div class="section-title">
-        Furniture
-      </div>
-
-      <div class="subsection">
-        Desks
-      </div>
-
-      <div class="cards">
-
-        <div class="card">
-          <div class="card-image">Image Placeholder</div>
-
-          <div class="card-body">
-
-            <div class="card-title">
-              Product Name
-            </div>
-
-            <div class="tags">
-              <div class="tag">KIT</div>
-              <div class="tag">DESKS</div>
-            </div>
-
-            <div class="price-row">
-              <div class="price">$0.00</div>
-              <div class="muted">84 days</div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-image">Image Placeholder</div>
-
-          <div class="card-body">
-
-            <div class="card-title">
-              Product Name
-            </div>
-
-            <div class="tags">
-              <div class="tag">KIT</div>
-              <div class="tag">DESKS</div>
-            </div>
-
-            <div class="price-row">
-              <div class="price">$0.00</div>
-              <div class="muted">84 days</div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-image">Image Placeholder</div>
-
-          <div class="card-body">
-
-            <div class="card-title">
-              Product Name
-            </div>
-
-            <div class="tags">
-              <div class="tag">KIT</div>
-              <div class="tag">DESKS</div>
-            </div>
-
-            <div class="price-row">
-              <div class="price">$0.00</div>
-              <div class="muted">84 days</div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
+      <button id="backToMapBtn">
+        Back To Map
+      </button>
 
     </div>
 
-    <footer>
-      <div>v1.21.0</div>
-      <div>Kiln Product Development & Supply Chain</div>
-      <div>Built with ♥</div>
-    </footer>
+  </div>
 
-  </main>
+  <div id="inventoryGrid"></div>
 
 </div>
 
+<script src="js/state.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/map.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/rooms.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/zoom.js"></script>
+<script src="js/inventory.js"></script>
+<script src="js/app.js"></script>
+
 </body>
+
 </html>
